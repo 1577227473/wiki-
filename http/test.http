@@ -1,20 +1,14 @@
-GET http://localhost:8080/hello
-## Accept:application/json
+GET http://127.0.0.1:8081/hello
 
-> {%
-client.test("test-hello",function() {
-  client.log("测试/hello接口");
-  client.log(response.body);
-  client.log(JSON.stringify(response.body));
-  client.assert(response.status === 200,"返回码不是200");
-  client.assert(response.body === "Hello World!","结果验证失败");
-  });
- %}
 ###
 
-POST http://localhost:8080/hello/post
+POST http://127.0.0.1:8081/hello/post
 Content-Type: application/x-www-form-urlencoded
 
 name=TEST
+
+###
+
+GET http://localhost:8081/test/list
 
 ###
