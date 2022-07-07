@@ -46,22 +46,41 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      Content
+      <pre>
+{{ebooks}}
+{{ebooks2}}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent,onMounted,ref,reactive,toRef } from 'vue';
 import axios from 'axios';
+import _default from "ant-design-vue/es/vc-cascader/Menus";
+import data = _default.data;
 
 export default defineComponent({
   name: 'Home',
   setup(){
     console.log("setup");
-    axios.get("http://localhost:8081/ebook/list?name=Spring").then(function(response){
-      console.log(response);
-    })
+    const ebooks=ref();
+    const ebooks1=reactive({books:[]});
+    onMounted(function (){
+      console.log("onMounted")
+      axios.get("http://localhost:8081/ebook/list?name=Spring").then(function(response){
+        const data=response.data;
+        ebooks.value=data.content;
+        ebooks1.books=data.content;
+        console.log(response);
+      });
+    });
+
+    return{
+      ebooks,
+      ebooks2:toRef(ebooks1,"books")
+    }
   }
+
 });
 </script>
