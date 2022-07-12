@@ -8,6 +8,7 @@ import com.Knowledge.wiki.req.EbookReq;
 import com.Knowledge.wiki.resp.EbookResp;
 import com.Knowledge.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,7 +24,9 @@ public class EbookService {
     {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        criteria.andNameLike("%"+ebookReq.getName()+"%");
+        if(!ObjectUtils.isEmpty(ebookReq.getName())){
+            criteria.andNameLike("%"+ebookReq.getName()+"%");
+        }
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
 //        List<EbookResp> respList = new ArrayList<>();
