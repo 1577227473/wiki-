@@ -116,7 +116,7 @@ export default defineComponent({
       pageSize: 3,};
     onMounted(function (){
       console.log("onMounted")
-      axios.get(process.env.VUE_APP_SERVER+"/ebook/list").then(function(response){
+      axios.get("/ebook/list").then(function(response){
         const data=response.data;
         ebooks.value=data.content;
         ebooks1.books=data.content;
