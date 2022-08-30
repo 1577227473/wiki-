@@ -20,4 +20,3 @@ insert into `ebook` (id, name,  description) VALUES (2,'Vue 入门教程','零�
 insert into `ebook` (id, name,  description) VALUES (3,'Python 入门教程','零基础入门Python开发，企业级应用开发最佳首选框架');
 insert into `ebook` (id, name,  description) VALUES (4,'Mysql 入门教程','零基础入门Mysql开发，企业级应用开发最佳首选框架');
 insert into `ebook` (id, name,  description) VALUES (5,'Oracle 入门教程','零基础入门Oracle开发，企业级应用开发最佳首选框架');
-

@@ -34,21 +34,21 @@
         :confirm-loading="modalLoading"
         @ok="handleModalOk"
     >
-      <a-form :model="ebooks" :label-col="{span:6}" :wrapper-col="wrapperCol">
+      <a-form :model="ebook" :label-col="{span:6}" :wrapper-col="wrapperCol">
         <a-form-item label="封面">
-          <a-input v-model:value="ebooks.cover" />
+          <a-input v-model:value="ebook.cover" />
         </a-form-item>
         <a-form-item label="名称">
-          <a-input v-model:value="ebooks.name" />
+          <a-input v-model:value="ebook.name" />
         </a-form-item>
         <a-form-item label="分类一">
-          <a-input v-model:value="ebooks.category1Id" />
+          <a-input v-model:value="ebook.category1Id" />
         </a-form-item>
         <a-form-item label="分类二">
-          <a-input v-model:value="ebooks.category2Id" />
+          <a-input v-model:value="ebook.category2Id" />
         </a-form-item>
         <a-form-item label="描述">
-          <a-input v-model:value="ebooks.desc" type="text"/>
+          <a-input v-model:value="ebook.description" type="text"/>
         </a-form-item>
       </a-form>>
     </a-modal>
@@ -61,7 +61,7 @@ import axios from "axios";
 export default defineComponent({
   name: 'AdminEbook',
   setup() {
-    const ebooks = ref();
+    const ebooks= ref();
     const pagination =ref({
       current:1,
       pageSize:4,
@@ -147,10 +147,20 @@ export default defineComponent({
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
-      setTimeout(() => {
-        modalVisible.value = false;
-        modalLoading.value = false;
-      }, 2000);
+      axios.post("/ebook/save",ebook.value).then((response)=>{
+        const data=response.data;//data = CommonResp
+        if(data.success){
+          modalVisible.value = false;
+          modalLoading.value = false;
+
+
+          //重新加载列表
+          handleQuery({
+            page:pagination.value.current,
+            size:pagination.value.pageSize
+          });
+        }
+      });
     };
 
     /*
@@ -158,7 +168,7 @@ export default defineComponent({
      */
     const edit = (record:any) => {
       modalVisible.value=true;
-      ebooks.value=record
+      ebook.value=record
     };
 
     onMounted(()=>{

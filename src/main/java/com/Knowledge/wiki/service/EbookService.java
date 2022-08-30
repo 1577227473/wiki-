@@ -4,8 +4,9 @@ package com.Knowledge.wiki.service;
 import com.Knowledge.wiki.domain.Ebook;
 import com.Knowledge.wiki.domain.EbookExample;
 import com.Knowledge.wiki.mapper.EbookMapper;
-import com.Knowledge.wiki.req.EbookReq;
-import com.Knowledge.wiki.resp.EbookResp;
+import com.Knowledge.wiki.req.EbookQueryReq;
+import com.Knowledge.wiki.req.EbookSaveReq;
+import com.Knowledge.wiki.resp.EbookQueryResp;
 import com.Knowledge.wiki.resp.PageResp;
 import com.Knowledge.wiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
@@ -26,15 +27,15 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq ebookReq)
+    public PageResp<EbookQueryResp> list(EbookQueryReq ebookQueryReq)
     {
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        if(!ObjectUtils.isEmpty(ebookReq.getName())){
-            criteria.andNameLike("%"+ebookReq.getName()+"%");
+        if(!ObjectUtils.isEmpty(ebookQueryReq.getName())){
+            criteria.andNameLike("%"+ ebookQueryReq.getName()+"%");
         }
-        PageHelper.startPage(ebookReq.getPage(),ebookReq.getSize());
+        PageHelper.startPage(ebookQueryReq.getPage(), ebookQueryReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo=new PageInfo<>(ebookList);
@@ -51,11 +52,21 @@ public class EbookService {
 //        }
 
         //列表复制
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp();
+        PageResp<EbookQueryResp> pageResp = new PageResp();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;
+    }
+    public void save(EbookSaveReq req){
+        Ebook ebook=CopyUtil.copy(req,Ebook.class);
+        if(ObjectUtils.isEmpty(req.getId())){
+            //Id为空，则新增
+            ebookMapper.insert(ebook);
+        } else {
+            //Id不为空，则更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }
