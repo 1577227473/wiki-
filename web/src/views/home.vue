@@ -4,72 +4,58 @@
       <a-menu
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
+          @click="handleClick"
       >
-        <a-sub-menu key="sub1">
-          <template #title>
-                <span>
-                  <user-outlined />
-                  subnav 1
-                </span>
+        <a-menu-item key="welcome">
+          <MailOutlined />
+          <span>欢迎</span>
+        </a-menu-item>
+
+
+        <a-sub-menu v-for="item in level1" :key="item.id">
+          <template v-slot:title>
+            <span><user-outlined />{{item.name}}</span>
           </template>
-          <a-menu-item key="1">option1</a-menu-item>
-          <a-menu-item key="2">option2</a-menu-item>
-          <a-menu-item key="3">option3</a-menu-item>
-          <a-menu-item key="4">option4</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
-                <span>
-                  <laptop-outlined />
-                  subnav 22
-                </span>
-          </template>
-          <a-menu-item key="5">option5</a-menu-item>
-          <a-menu-item key="6">option6</a-menu-item>
-          <a-menu-item key="7">option7</a-menu-item>
-          <a-menu-item key="8">option8</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub3">
-          <template #title>
-                <span>
-                  <notification-outlined />
-                  subnav 3
-                </span>
-          </template>
-          <a-menu-item key="9">option9</a-menu-item>
-          <a-menu-item key="10">option10</a-menu-item>
-          <a-menu-item key="11">option11</a-menu-item>
-          <a-menu-item key="12">option12</a-menu-item>
+          <a-menu-item v-for="child in item.children" :key="child.id">
+            <MailOutlined /><span>{{child.name}}</span>
+          </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-    <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
-      <template #renderItem="{ item }">
-        <a-list-item key="item.name">
-          <template #actions>
-          <span v-for="{ type, text } in actions" :key="type">
-            <component v-bind:is="type" style="margin-right: 8px" />
-            {{ text }}
-          </span>
-          </template>
-
-          <a-list-item-meta :description="item.description">
-            <template #title>
-              <a :href="item.href">{{ item.name }}</a>
+      <div class="welcome" v-show="isShowWelcome">
+        <the-welcome></the-welcome>
+      </div>
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
+        <template #renderItem="{ item }">
+          <a-list-item key="item.name">
+            <template #actions>
+              <span>
+                <component v-bind:is="'FileOutlined'" style="margin-right: 8px" />
+                {{ item.docCount }}
+              </span>
+              <span>
+                <component v-bind:is="'UserOutlined'" style="margin-right: 8px" />
+                {{ item.viewCount }}
+              </span>
+              <span>
+                <component v-bind:is="'LikeOutlined'" style="margin-right: 8px" />
+                {{ item.voteCount }}
+              </span>
             </template>
-            <template #avatar><a-avatar :src="item.cover" /></template>
-          </a-list-item-meta>
-          {{ item.content }}
-        </a-list-item>
-      </template>
-    </a-list>
-<!--      <pre>-->
-<!--{{ebooks}}-->
-<!--{{ebooks2}}-->
-<!--      </pre>-->
+            <a-list-item-meta :description="item.description">
+              <template #title>
+                <router-link :to="'/doc?ebookId=' + item.id">
+                  {{ item.name }}
+                </router-link>
+              </template>
+              <template #avatar><a-avatar :src="item.cover"/></template>
+            </a-list-item-meta>
+          </a-list-item>
+        </template>
+      </a-list>
     </a-layout-content>
   </a-layout>
 </template>
@@ -80,6 +66,8 @@ import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-v
 
 import { defineComponent,onMounted,ref,reactive,toRef } from 'vue';
 import axios from 'axios';
+import {message} from "ant-design-vue";
+import {Tool} from "@/util/tool";
 // import _default from "ant-design-vue/es/vc-cascader/Menus";
 
 // const listData: Record<string, string>[] = [];
@@ -107,14 +95,40 @@ export default defineComponent({
   name: 'Home',
   setup(){
     const ebooks=ref();
-    const ebooks1=reactive({books:[]});
-    const pagination = {
-      onChange: (page: number) => {
-        console.log(page);
-      },
-      pageSize: 3,};
+    // const ebooks1=reactive({books:[]});
+
+    const level1 =  ref();
+    let categorys: any;
+    /**
+     * 查询所有分类
+     **/
+    const handleQueryCategory = () => {
+      axios.get("/category/all").then((response) => {
+        const data = response.data;
+        if (data.success) {
+          categorys = data.content;
+          console.log("原始数组：", categorys);
+
+          // // 加载完分类后，将侧边栏全部展开
+          // openKeys.value = [];
+          // for (let i = 0; i < categorys.length; i++) {
+          //   openKeys.value.push(categorys[i].id)
+          // }
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys, 0);
+          console.log("树形结构：", level1.value);
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+    const handleClick = () => {
+      console.log("menu click")
+    };
 
     onMounted(function (){
+      handleQueryCategory();
       axios.get("/ebook/list",{
         params:{
           page:1,
@@ -126,22 +140,27 @@ export default defineComponent({
         // ebooks1.books=data.content;
       });
     });
-    const actions: Record<string, string>[] = [
-      { type: 'StarOutlined', text: '156' },
-      { type: 'LikeOutlined', text: '156' },
-      { type: 'MessageOutlined', text: '2' },
-    ];
+
     return{
       ebooks,
       // ebooks2:toRef(ebooks1,"books"),
       // listData,
-      pagination,
-      actions,
-      };
+      pagination : {
+        onChange: (page: any) => {
+          console.log(page);
+        },
+        pageSize: 3,
+      },
+      actions:[
+      { type: 'StarOutlined', text: '156' },
+      { type: 'LikeOutlined', text: '156' },
+      { type: 'MessageOutlined', text: '2' },
+     ],
 
-
-
-  },
+      handleClick,
+      level1,
+    }
+  }
 });
 </script>
 
