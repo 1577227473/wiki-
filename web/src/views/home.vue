@@ -10,8 +10,6 @@
           <MailOutlined />
           <span>欢迎</span>
         </a-menu-item>
-
-
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
             <span><user-outlined />{{item.name}}</span>
@@ -26,7 +24,7 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-        <the-welcome></the-welcome>
+        <h1>欢迎来到知识库系统</h1>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
         <template #renderItem="{ item }">
@@ -123,9 +121,19 @@ export default defineComponent({
         }
       });
     };
-    const handleClick = () => {
-      console.log("menu click")
+
+
+    const isShowWelcome = ref(true);
+
+    const handleClick = (value:any) => {
+      // console.log("menu click",value)
+      if(value.key === 'welcome'){
+        isShowWelcome.value = true;
+      } else {
+        isShowWelcome.value=false;
+      }
     };
+
 
     onMounted(function (){
       handleQueryCategory();
@@ -159,6 +167,8 @@ export default defineComponent({
 
       handleClick,
       level1,
+
+      isShowWelcome
     }
   }
 });
