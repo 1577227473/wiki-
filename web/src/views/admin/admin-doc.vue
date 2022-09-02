@@ -184,7 +184,9 @@ export default defineComponent({
 
     //---------表单----------
     const doc = ref();
-    doc.value={};
+    doc.value={
+      ebookId:route.query.ebookId
+    };
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E('#content');
@@ -308,7 +310,7 @@ export default defineComponent({
       //清空文档
       editor.txt.html("");
       modalVisible.value=true;
-      doc.value= {
+      doc.value = {
         ebookId:route.query.ebookId
       };
 
