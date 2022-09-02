@@ -1,8 +1,10 @@
 package com.Knowledge.wiki.service;
 
 
+import com.Knowledge.wiki.domain.Content;
 import com.Knowledge.wiki.domain.Doc;
 import com.Knowledge.wiki.domain.DocExample;
+import com.Knowledge.wiki.mapper.ContentMapper;
 import com.Knowledge.wiki.mapper.DocMapper;
 import com.Knowledge.wiki.req.DocQueryReq;
 import com.Knowledge.wiki.req.DocSaveReq;
@@ -27,6 +29,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -63,13 +68,22 @@ public class DocService {
     }
     public void save(DocSaveReq req){
         Doc doc=CopyUtil.copy(req,Doc.class);
-        if(ObjectUtils.isEmpty(req.getId())){
+        Content content = CopyUtil.copy(req,Content.class);
+    if(ObjectUtils.isEmpty(req.getId())){
             //Id为空，则新增
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            content.setId(doc.getId());
+            contentMapper.insert(content);
+
         } else {
             //Id不为空，则更新
             docMapper.updateByPrimaryKey(doc);
+            int count=contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count == 0) {
+                contentMapper.insert(content);
+            }
         }
     }
 
