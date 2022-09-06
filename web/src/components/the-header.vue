@@ -21,10 +21,20 @@
       <a-menu-item key="/about">
         <router-link to="/about">关于我们</router-link>
       </a-menu-item>
-      <a class="login-menu" v-show="user.id">
-        <a-button type="white">您好:{{user.name}}</a-button>
-<!--        <p>好:{{user.name}}</p>-->
-      </a>
+
+        <a-space size="small"  v-show="user.id" style="position:absolute;right:0px;">
+          <a-button type="white"> 您好:{{user.name}}</a-button>
+          <!--        <p>好:{{user.name}}</p>-->
+          <a-popconfirm
+              title="是否确认退出？"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="logout()"
+          >
+            <a-button  type="white" >退出登录</a-button>
+          </a-popconfirm>
+        </a-space>
+
       <a class="login-menu" v-show="!user.id" @click="showLoginModal" >
         <span>登录</span>
       </a>
@@ -80,14 +90,19 @@ export default defineComponent({
           loginModalVisible.value = false;
           message.success("登录成功！");
           user.value = data.content;
-          // console.log("username:"+user.value.name);
-          console.log("username:"+user.value.toString());
         } else {
           message.error(data.message);
         }
       });
     };
 
+    //登录
+    const logout = ()=>{
+      console.log("开始退出登录");
+      user.value ={};
+      message.success("退出登录成功！");
+
+    };
 
     return{
       loginModalVisible,
@@ -95,7 +110,8 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
-      user
+      user,
+      logout
     }
   }
 });
@@ -104,7 +120,9 @@ export default defineComponent({
 <style>
   .login-menu {
     position:absolute;
+    /*float: right;*/
     right:20px;
     color: white;
+    /*padding-left: 10px;*/
   }
 </style>
