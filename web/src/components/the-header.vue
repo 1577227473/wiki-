@@ -21,11 +21,13 @@
       <a-menu-item key="/about">
         <router-link to="/about">关于我们</router-link>
       </a-menu-item>
-      <div style="position:absolute;right:20px; ">
-        <a class="login-menu" @click="showLoginModal" >
-          <span>登录</span>
-        </a>
-      </div>
+      <a class="login-menu" v-show="user.id">
+        <a-button type="white">您好:{{user.name}}</a-button>
+<!--        <p>好:{{user.name}}</p>-->
+      </a>
+      <a class="login-menu" v-show="!user.id" @click="showLoginModal" >
+        <span>登录</span>
+      </a>
     </a-menu>
     <a-modal
         title="登录"
@@ -53,9 +55,10 @@ import {message} from "ant-design-vue";
 export default defineComponent({
   name: 'the-header',
   setup(){
+    //登录
     const loginUser = ref({
-      loginName:"test",
-      password:"test"
+      loginName:"test1",
+      password:"test123"
     });
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
@@ -63,36 +66,45 @@ export default defineComponent({
       loginModalVisible.value = true;
     };
 
+    //登录后保存
+    const user = ref();
+    user.value={};
     //登录
     const login = ()=>{
       console.log("开始登录");
       loginModalLoading.value = true;
-      axios.post("/user/login",loginUser.value).then((response)=>{
+      axios.post('/user/login',loginUser.value).then((response)=>{
         loginModalLoading.value = false;
-        const data=response.data;//data = CommonResp
+        const data=response.data;
         if(data.success){
           loginModalVisible.value = false;
-          message.success("登录成功！")
+          message.success("登录成功！");
+          user.value = data.content;
+          // console.log("username:"+user.value.name);
+          console.log("username:"+user.value.toString());
         } else {
           message.error(data.message);
         }
       });
     };
 
+
     return{
       loginModalVisible,
       loginModalLoading,
       showLoginModal,
       loginUser,
-      login
+      login,
+      user
     }
-
   }
 });
 </script>
 
 <style>
   .login-menu {
+    position:absolute;
+    right:20px;
     color: white;
   }
 </style>
