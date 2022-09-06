@@ -67,7 +67,7 @@
         <a-form-item label="密码">
           <a-input v-model:value="user.password" />
         </a-form-item>
-      </a-form>>
+      </a-form>
     </a-modal>
 </template>
 

@@ -6,8 +6,10 @@ import com.Knowledge.wiki.domain.UserExample;
 import com.Knowledge.wiki.exception.BusinessException;
 import com.Knowledge.wiki.exception.BusinessExceptionCode;
 import com.Knowledge.wiki.mapper.UserMapper;
+import com.Knowledge.wiki.req.UserLoginReq;
 import com.Knowledge.wiki.req.UserQueryReq;
 import com.Knowledge.wiki.req.UserSaveReq;
+import com.Knowledge.wiki.resp.UserLoginResp;
 import com.Knowledge.wiki.resp.UserQueryResp;
 import com.Knowledge.wiki.resp.PageResp;
 import com.Knowledge.wiki.util.CopyUtil;
@@ -97,6 +99,28 @@ public class UserService {
             return null;
         } else {
             return userList.get(0);
+        }
+    }
+
+    /**
+     * 登录
+     */
+    public UserLoginResp login(UserLoginReq req){
+        User userDb = selectByLoginName(req.getLoginName());
+        if(ObjectUtils.isEmpty(userDb)){
+            //用户名不存在
+            LOG.info("用户名不存在,{}",req.getLoginName());
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        } else {
+          if(userDb.getPassword().equals(req.getPassword())){
+              //登录成功
+              UserLoginResp userLoginResp = CopyUtil.copy(userDb, UserLoginResp.class);
+              return  userLoginResp;
+          } else {
+              //密码不对
+              LOG.info("密码不对,输入密码：{},数据库密码：{}",req.getLoginName(), userDb.getPassword());
+              throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+          }
         }
     }
 }
