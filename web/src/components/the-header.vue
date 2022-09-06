@@ -47,6 +47,8 @@
 
 <script lang="ts">
 import {defineComponent, ref} from 'vue';
+import axios from "axios";
+import {message} from "ant-design-vue";
 
 export default defineComponent({
   name: 'the-header',
@@ -64,6 +66,17 @@ export default defineComponent({
     //登录
     const login = ()=>{
       console.log("开始登录");
+      loginModalLoading.value = true;
+      axios.post("/user/login",loginUser.value).then((response)=>{
+        loginModalLoading.value = false;
+        const data=response.data;//data = CommonResp
+        if(data.success){
+          loginModalVisible.value = false;
+          message.success("登录成功！")
+        } else {
+          message.error(data.message);
+        }
+      });
     };
 
     return{
