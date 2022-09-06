@@ -21,9 +21,11 @@
       <a-menu-item key="/about">
         <router-link to="/about">关于我们</router-link>
       </a-menu-item>
-      <a class="login-menu" @click="showLoginModal">
-        <span>登录</span>
-      </a>
+      <div style="position:absolute;right:20px; ">
+        <a class="login-menu" @click="showLoginModal" >
+          <span>登录</span>
+        </a>
+      </div>
     </a-menu>
     <a-modal
         title="登录"
@@ -78,7 +80,6 @@ export default defineComponent({
 
 <style>
   .login-menu {
-    float: right;
     color: white;
   }
 </style>
