@@ -86,3 +86,5 @@ create table `user` (
 
 insert into `user`(id, login_name, name, password) values (1,'test','测试','test');
 
+update doc set view_count = view_count+1 where id=1
+
