@@ -93,6 +93,7 @@ public class DocService {
         }
     }
 
+    //阅读量
     public String findContent(Long id) {
         Content content=contentMapper.selectByPrimaryKey(id);
         //文档阅读数加一
@@ -102,6 +103,11 @@ public class DocService {
         }else {
             return content.getContent();
         }
+    }
+
+    //点赞量
+    public void vote(Long id){
+        docMapperCust.increaseVoteCount(id);
     }
 
     public void delete(Long id) {
