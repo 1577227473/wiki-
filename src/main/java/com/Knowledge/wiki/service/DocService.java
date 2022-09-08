@@ -83,6 +83,9 @@ public class DocService {
             content.setId(doc.getId());
             contentMapper.insert(content);
 
+            //更新电子书文档数量信息
+            docMapperCust.updateEbookInfo();
+
         } else {
             //Id不为空，则更新
             docMapper.updateByPrimaryKey(doc);
@@ -98,6 +101,9 @@ public class DocService {
         Content content=contentMapper.selectByPrimaryKey(id);
         //文档阅读数加一
         docMapperCust.increaseViewCount(id);
+
+        //更新电子书阅读量信息
+        docMapperCust.updateEbookInfo();
         if(ObjectUtils.isEmpty(content)){
             return "";
         }else {
@@ -108,10 +114,16 @@ public class DocService {
     //点赞量
     public void vote(Long id){
         docMapperCust.increaseVoteCount(id);
+
+        //更新电子书点赞量信息
+        docMapperCust.updateEbookInfo();
     }
 
     public void delete(Long id) {
         docMapper.deleteByPrimaryKey(id);
+
+        //更新电子书文档数量信息
+        docMapperCust.updateEbookInfo();
     }
 
     public void delete(List<String> ids) {
@@ -119,6 +131,9 @@ public class DocService {
         DocExample.Criteria criteria = docExample.createCriteria();
         criteria.andIdIn(ids);
         docMapper.deleteByExample(docExample);
+
+        //更新电子书文档数量信息
+        docMapperCust.updateEbookInfo();
     }
 
     public List<DocQueryResp> all(Long ebookId)
