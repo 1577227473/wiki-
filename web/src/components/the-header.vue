@@ -9,15 +9,16 @@
       <a-menu-item key="/">
         <router-link to="/">首页</router-link>
       </a-menu-item>
-      <a-menu-item key="/admin/user" :style="user.id? {} :{display:'none'}">
+      <a-menu-item key="/admin/user" :style="admin.id? {} :{display:'none'}">
         <router-link to="/admin/user">用户管理</router-link>
       </a-menu-item>
-      <a-menu-item key="/admin/ebook" :style="user.id? {} :{display:'none'}">
+      <a-menu-item key="/admin/ebook" :style="admin.id? {} :{display:'none'}">
         <router-link to="/admin/ebook">电子书管理</router-link>
       </a-menu-item>
-      <a-menu-item key="/admin/category" :style="user.id? {} : {display:'none'}">
+      <a-menu-item key="/admin/category" :style="admin.id? {} :{display:'none'}">
         <router-link to="/admin/category">分类管理</router-link>
       </a-menu-item>
+
       <a-menu-item key="/about">
         <router-link to="/about">关于我们</router-link>
       </a-menu-item>
@@ -65,11 +66,12 @@ import {message} from "ant-design-vue";
 export default defineComponent({
   name: 'the-header',
   setup(){
+    //管理员验证登录
+    const admin = ref();
+    admin.value={};
     //登录
-    const loginUser = ref({
-      loginName:"test1",
-      password:"test123"
-    });
+    const loginUser = ref();
+    loginUser.value={};
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
     const showLoginModal = () =>{
@@ -90,6 +92,9 @@ export default defineComponent({
           loginModalVisible.value = false;
           message.success("登录成功！");
           user.value = data.content;
+          if (user.value.id == 2584159805640704){
+            admin.value = user.value;
+          }
         } else {
           message.error(data.message);
         }
@@ -99,7 +104,8 @@ export default defineComponent({
     //登录
     const logout = ()=>{
       console.log("开始退出登录");
-      user.value ={};
+      user.value = {};
+      admin.value = {};
       message.success("退出登录成功！");
 
     };
@@ -111,7 +117,8 @@ export default defineComponent({
       loginUser,
       login,
       user,
-      logout
+      logout,
+      admin
     }
   }
 });
