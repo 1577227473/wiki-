@@ -24,7 +24,8 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-        <h1>欢迎来到知识库系统</h1>
+<!--        <h1>欢迎来到知识库系统</h1>-->
+        <banner></banner>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
         <template #renderItem="{ item }">
@@ -66,26 +67,12 @@ import { defineComponent,onMounted,ref,reactive,toRef } from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
-// import _default from "ant-design-vue/es/vc-cascader/Menus";
-
-// const listData: Record<string, string>[] = [];
-//
-// for (let i = 0; i < 23; i++) {
-//   listData.push({
-//     href: 'https://www.antdv.com/',
-//     title: `ant design vue part ${i}`,
-//     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-//     description:
-//         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-//     content:
-//         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-//   });
-// }
-
+import Banner from "@/views/admin/banner.vue";
 
 
 export default defineComponent({
   components: {
+    Banner,
     StarOutlined,
     LikeOutlined,
     MessageOutlined,
@@ -93,7 +80,6 @@ export default defineComponent({
   name: 'Home',
   setup(){
     const ebooks=ref();
-    // const ebooks1=reactive({books:[]});
 
     const level1 =  ref();
     let categorys: any;
@@ -106,13 +92,6 @@ export default defineComponent({
         if (data.success) {
           categorys = data.content;
           console.log("原始数组：", categorys);
-
-          // // 加载完分类后，将侧边栏全部展开
-          // openKeys.value = [];
-          // for (let i = 0; i < categorys.length; i++) {
-          //   openKeys.value.push(categorys[i].id)
-          // }
-
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
           console.log("树形结构：", level1.value);
@@ -135,12 +114,10 @@ export default defineComponent({
       }).then(function(response){
         const data=response.data;
         ebooks.value=data.content.list;
-        // ebooks1.books=data.content;
       });
     };
 
     const handleClick = (value:any) => {
-      // console.log("menu click",value)
       if(value.key === 'welcome'){
         isShowWelcome.value = true;
       } else {
@@ -156,8 +133,6 @@ export default defineComponent({
 
     return{
       ebooks,
-      // ebooks2:toRef(ebooks1,"books"),
-      // listData,
       pagination : {
         onChange: (page: any) => {
           console.log(page);
