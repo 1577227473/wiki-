@@ -9,6 +9,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "allowJs": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
@@ -28,6 +29,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "src/public/js/*.js",
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
