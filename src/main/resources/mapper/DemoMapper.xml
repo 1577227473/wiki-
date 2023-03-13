@@ -81,7 +81,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from demo
     where id = #{id,jdbcType=BIGINT}
@@ -142,7 +142,7 @@
   <update id="updateByExample" parameterType="map">
     update demo
     set id = #{record.id,jdbcType=BIGINT},
-      `name` = #{record.name,jdbcType=VARCHAR}
+    `name` = #{record.name,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

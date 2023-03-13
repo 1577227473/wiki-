@@ -2,10 +2,11 @@ package com.Knowledge.wiki.mapper;
 
 import com.Knowledge.wiki.domain.Category;
 import com.Knowledge.wiki.domain.CategoryExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface CategoryMapper {
+import java.util.List;
+
+public interface    CategoryMapper {
     long countByExample(CategoryExample example);
 
     int deleteByExample(CategoryExample example);
