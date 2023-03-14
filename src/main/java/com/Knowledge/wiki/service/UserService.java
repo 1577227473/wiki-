@@ -82,7 +82,9 @@ public class UserService {
             }
         } else {
             //Id不为空，则更新
-            userMapper.updateByPrimaryKey(user);
+            user.setLoginName(null);
+            user.setPassword(null);
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
