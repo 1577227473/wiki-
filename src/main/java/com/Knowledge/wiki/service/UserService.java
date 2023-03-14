@@ -8,10 +8,11 @@ import com.Knowledge.wiki.exception.BusinessExceptionCode;
 import com.Knowledge.wiki.mapper.UserMapper;
 import com.Knowledge.wiki.req.UserLoginReq;
 import com.Knowledge.wiki.req.UserQueryReq;
+import com.Knowledge.wiki.req.UserRestPasswordReq;
 import com.Knowledge.wiki.req.UserSaveReq;
+import com.Knowledge.wiki.resp.PageResp;
 import com.Knowledge.wiki.resp.UserLoginResp;
 import com.Knowledge.wiki.resp.UserQueryResp;
-import com.Knowledge.wiki.resp.PageResp;
 import com.Knowledge.wiki.util.CopyUtil;
 import com.Knowledge.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
@@ -124,5 +125,14 @@ public class UserService {
               throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
           }
         }
+    }
+
+    /**
+     * 修改密码
+     */
+    public void restPassword(UserRestPasswordReq req){
+        User user=CopyUtil.copy(req,User.class);
+        System.out.println("密码："+user.getPassword());
+        userMapper.updateByPrimaryKeySelective(user);
     }
 }

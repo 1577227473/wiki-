@@ -2,6 +2,7 @@ package com.Knowledge.wiki.controller;
 
 import com.Knowledge.wiki.req.UserLoginReq;
 import com.Knowledge.wiki.req.UserQueryReq;
+import com.Knowledge.wiki.req.UserRestPasswordReq;
 import com.Knowledge.wiki.req.UserSaveReq;
 import com.Knowledge.wiki.resp.CommonResp;
 import com.Knowledge.wiki.resp.PageResp;
@@ -50,6 +51,14 @@ public class UserController {
         CommonResp<UserLoginResp> resp = new CommonResp<>();
         UserLoginResp userLoginResp=userService.login(userReq);
         resp.setContent(userLoginResp);
+        return resp;
+    }
+
+    @PostMapping("/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserRestPasswordReq Req) {
+        Req.setPassword(DigestUtils.md5DigestAsHex(Req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.restPassword(Req);
         return resp;
     }
 
