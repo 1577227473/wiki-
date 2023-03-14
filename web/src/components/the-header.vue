@@ -63,6 +63,9 @@ import {defineComponent, ref} from 'vue';
 import axios from "axios";
 import {message} from "ant-design-vue";
 
+declare let hexMd5:any;
+declare let KEY:any;
+
 export default defineComponent({
   name: 'the-header',
   setup(){
@@ -85,6 +88,7 @@ export default defineComponent({
     const login = ()=>{
       console.log("开始登录");
       loginModalLoading.value = true;
+      user.value.password = hexMd5(user.value.password + KEY);
       axios.post('/user/login',loginUser.value).then((response)=>{
         loginModalLoading.value = false;
         const data=response.data;
