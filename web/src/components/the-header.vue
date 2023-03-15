@@ -23,7 +23,7 @@
         <router-link to="/about">关于我们</router-link>
       </a-menu-item>
 
-        <a-space size="small"  v-show="user.id" style="position:absolute;right:0px;">
+        <a-space size="small"  v-show="user.id" style="position:absolute;right:10px;">
           <a-button type="white"> 您好:{{user.name}}</a-button>
           <!--        <p>好:{{user.name}}</p>-->
           <a-popconfirm
@@ -82,9 +82,6 @@ export default defineComponent({
       loginModalVisible.value = true;
     };
 
-    // //登录后保存
-    // const user = ref();
-    // user.value={};
     const user = computed(() => store.state.user);
 
     //登录
@@ -100,23 +97,29 @@ export default defineComponent({
         if(data.success){
           loginModalVisible.value = false;
           message.success("登录成功！");
-          // user.value = data.content;
-          store.commit("setUser", user.value);
-          if (user.value.id == 5556165418767871){
-            admin.value = user.value;
-          }
+          store.commit("setUser", data.content);
+          // if (user.value.id == 5556165418767871){
+          //   admin.value = user.value;
+          // }
         } else {
           message.error(data.message);
         }
       });
     };
 
-    //登录
+    //退出登录
     const logout = ()=>{
       console.log("开始退出登录");
-      // user.value = {};
-      admin.value = {};
-      message.success("退出登录成功！");
+      axios.get('/user/logout/'+user.value.token).then((response)=>{
+        const data=response.data;
+        if(data.success){
+          message.success("退出登录成功！");
+          //清除store中的信息
+          store.commit("setUser", {});
+        } else {
+          message.error(data.message);
+        }
+      });
 
     };
 
