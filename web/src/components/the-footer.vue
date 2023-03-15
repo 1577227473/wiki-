@@ -5,9 +5,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import store from '@/store';
+import { defineComponent,computed } from 'vue';
 
 export default defineComponent({
   name: 'the-footer',
+  setup(){
+    const user = computed(() => store.state.user);
+
+    return{
+      user
+    }
+  }
 });
+
+
 </script>
