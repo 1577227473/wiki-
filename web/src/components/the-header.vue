@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
+import {computed, defineComponent, ref} from 'vue';
 import axios from "axios";
 import {message} from "ant-design-vue";
 import store from "@/store";
@@ -82,9 +82,11 @@ export default defineComponent({
       loginModalVisible.value = true;
     };
 
-    //登录后保存
-    const user = ref();
-    user.value={};
+    // //登录后保存
+    // const user = ref();
+    // user.value={};
+    const user = computed(() => store.state.user);
+
     //登录
     const login = ()=>{
       console.log("开始登录");
@@ -98,7 +100,7 @@ export default defineComponent({
         if(data.success){
           loginModalVisible.value = false;
           message.success("登录成功！");
-          user.value = data.content;
+          // user.value = data.content;
           store.commit("setUser", user.value);
           if (user.value.id == 5556165418767871){
             admin.value = user.value;
@@ -112,7 +114,7 @@ export default defineComponent({
     //登录
     const logout = ()=>{
       console.log("开始退出登录");
-      user.value = {};
+      // user.value = {};
       admin.value = {};
       message.success("退出登录成功！");
 
