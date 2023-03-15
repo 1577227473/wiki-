@@ -9,7 +9,7 @@ public class UserLoginReq {
 
     @NotEmpty(message = "【密码】不能为空")
 //    @Length(min=6,max=20,message = "【密码】6~20位")
-    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$",message = "【密码】格式不对")
+    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,50}$",message = "【密码】格式不对")
     private String password;
 
     public String getLoginName() {

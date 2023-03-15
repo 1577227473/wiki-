@@ -121,7 +121,7 @@ public class UserService {
               return  userLoginResp;
           } else {
               //密码不对
-              LOG.info("密码不对,输入密码：{},数据库密码：{}",req.getLoginName(), userDb.getPassword());
+              LOG.info("密码不对,输入密码：{},数据库密码：{}",req.getPassword(), userDb.getPassword());
               throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
           }
         }
