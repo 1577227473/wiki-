@@ -44,7 +44,7 @@
                 cancel-text="否"
                 @confirm="handleDelete (record.id)"
             >
-              <a-button type="danger">
+              <a-button type="danger" >
                 删除
               </a-button>
             </a-popconfirm>
@@ -214,17 +214,24 @@ export default defineComponent({
       user.value= {};
     };
 
+    //管理员验证登录
+    const admin = ref();
+    admin.value={id:"5556165418767871"};
     const handleDelete = (id: number) => {
-      axios.delete("/user/delete/"+id).then((response)=>{
-        const data=response.data;//data = CommonResp
-        if(data.success){
-          //重新加载列表
-          handleQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize
-          });
-        }
-      });
+      if (id == admin.value.id){
+        message.error("管理员不可删除");
+      } else {
+        axios.delete("/user/delete/"+id).then((response)=>{
+          const data=response.data;//data = CommonResp
+          if(data.success){
+            //重新加载列表
+            handleQuery({
+              page:pagination.value.current,
+              size:pagination.value.pageSize
+            });
+          }
+        });
+      }
     };
 
 
