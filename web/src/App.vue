@@ -1,8 +1,10 @@
 <template>
-  <a-layout id="components-layout-demo-top-side-2">
-    <the-header></the-header>
+  <a-layout>
+    <a-affix :offset-top="top">
+      <the-header></the-header>
+    </a-affix>
     <router-view></router-view>
-    <the-footer></the-footer>
+    <the-footer style="height: 40px"></the-footer>
   </a-layout>
 </template>
 
@@ -20,20 +22,20 @@
 </script>
 
 <style>
-#components-layout-demo-top-side-2 .logo {
-  float: left;
-  width: 120px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
-  background: rgba(255, 255, 255, 0.3);
+html, body, #app {
+  height: 100%;
 }
 
-.ant-row-rtl #components-layout-demo-top-side-2 .logo {
-  float: right;
-  margin: 16px 0 16px 24px;
+#root,body,html {
+  height: 100%;
 }
-
-.site-layout-background {
-  background: #fff;
+.ant-layout {
+  display: flex!important;
+  width: 100%!important;
+  min-height: 100%!important;
+}
+.ant-layout-footer {
+  padding: 0px 0px;
+  font-size: 14px;
 }
 </style>

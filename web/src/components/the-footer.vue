@@ -1,6 +1,8 @@
 <template>
-  <a-layout-footer style="text-align: center">
-    知识库系统
+  <a-layout-footer style="background-color: #e9e7ef;height: 100%">
+    <div style="float: top;margin-left: 47%;margin-top: 10px">
+      <span>小西知识文库</span>
+    </div>
   </a-layout-footer>
 </template>
 
@@ -21,3 +23,10 @@ export default defineComponent({
 
 
 </script>
+
+<style>
+.ant-layout-footer {
+  padding: 0px 0px!important;
+  font-size: 14px!important;
+}
+</style>

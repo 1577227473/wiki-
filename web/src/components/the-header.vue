@@ -1,45 +1,53 @@
 <template>
   <a-layout-header class="header">
-    <div class="logo"></div>
-    <a-menu
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-    >
-      <a-menu-item key="/">
-        <router-link to="/">首页</router-link>
-      </a-menu-item>
-      <a-menu-item key="/admin/user" :style="user.id? {} :{display:'none'}">
-        <router-link to="/admin/user">用户管理</router-link>
-      </a-menu-item>
-      <a-menu-item key="/admin/ebook" :style="user.id? {} :{display:'none'}">
-        <router-link to="/admin/ebook">电子书管理</router-link>
-      </a-menu-item>
-      <a-menu-item key="/admin/category" :style="user.id? {} :{display:'none'}">
-        <router-link to="/admin/category">分类管理</router-link>
-      </a-menu-item>
+    <div style="float: left;padding-right: 45px">
+      <span style="color: white;font-weight:bold">小西知识文库</span>
+    </div>
+    <div style="float: left;width: 80%">
+      <a-menu
+          theme="dark"
+          mode="horizontal"
+          :style="{ lineHeight: '64px' }"
+      >
+        <a-menu-item key="/">
+          <router-link to="/">首页</router-link>
+        </a-menu-item>
+        <a-menu-item key="/admin/user" :style="user.id? {} :{display:'none'}">
+          <router-link to="/admin/user">用户管理</router-link>
+        </a-menu-item>
+        <a-menu-item key="/admin/ebook" :style="user.id? {} :{display:'none'}">
+          <router-link to="/admin/ebook">电子书管理</router-link>
+        </a-menu-item>
+        <a-menu-item key="/admin/category" :style="user.id? {} :{display:'none'}">
+          <router-link to="/admin/category">分类管理</router-link>
+        </a-menu-item>
+        <a-menu-item key="/about" v-show="!user.id">
+          <router-link to="/about">关于我们</router-link>
+        </a-menu-item>
 
-      <a-menu-item key="/about">
-        <router-link to="/about">关于我们</router-link>
-      </a-menu-item>
+        <a class="login-menu" v-show="!user.id" @click="showLoginModal" >
+          <span>登录</span>
+        </a>
+      </a-menu>
+    </div>
+    <div size="small" v-show="user.id" style="float: right;margin-right:30px;">
+      <a-dropdown :placement="placement">
+        <a-avatar size="large" src="/image/head.png" />
+        <template #overlay>
+          <a-menu @click="handleMenuClick">
+            <a-menu-item key="1">
+              <UserOutlined />
+              我的
+            </a-menu-item>
+            <a-menu-item key="2" @click="logout">
+              <PoweroffOutlined />
+              退出登录
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
+    </div>
 
-        <a-space size="small"  v-show="user.id" style="position:absolute;right:10px;">
-          <a-button type="white"> 您好:{{user.name}}</a-button>
-          <!--        <p>好:{{user.name}}</p>-->
-          <a-popconfirm
-              title="是否确认退出？"
-              ok-text="是"
-              cancel-text="否"
-              @confirm="logout()"
-          >
-            <a-button  type="white" >退出登录</a-button>
-          </a-popconfirm>
-        </a-space>
-
-      <a class="login-menu" v-show="!user.id" @click="showLoginModal" >
-        <span>登录</span>
-      </a>
-    </a-menu>
     <a-modal
         title="登录"
         v-model:visible="loginModalVisible"
@@ -48,12 +56,22 @@
     >
       <a-form :model="loginUser" :label-col="{span:6}" :wrapper-col="{ span: 18 }">
         <a-form-item label="登录名">
-          <a-input v-model:value="loginUser.loginName"/>
+<!--          <a-input v-model:value="loginUser.loginName"/>-->
+          <a-input v-model:value="loginUser.loginName" placeholder="请输入登录名">
+            <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+          </a-input>
         </a-form-item>
         <a-form-item label="密码">
-          <a-input v-model:value="loginUser.password" type="password"/>
+<!--          <a-input v-model:value="loginUser.password" type="password"/>-->
+          <a-input v-model:value="loginUser.password" type="password" placeholder="请输入密码">
+            <template #prefix><LockOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+          </a-input>
         </a-form-item>
       </a-form>
+      <template #footer>
+        <a-button key="back" @click="handleCancel">注册</a-button>
+        <a-button key="submit" type="primary" :loading="loginModalLoading" @click="login">登录</a-button>
+      </template>
     </a-modal>
   </a-layout-header>
 </template>

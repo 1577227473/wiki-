@@ -1,9 +1,8 @@
 <template>
   <a-layout>
-    <a-layout-sider width="200" style="background: #ffffff">
+    <a-layout-sider width="200" theme="light">
       <a-menu
           mode="inline"
-          :style="{ height: '100%', borderRight: 0 }"
           @click="handleClick"
       >
         <a-menu-item key="welcome">
@@ -21,41 +20,36 @@
       </a-menu>
     </a-layout-sider>
     <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+        :style="{ padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
 <!--        <h1>欢迎来到知识库系统</h1>-->
-        <banner></banner>
+      <banner></banner>
+        <br/>
       </div>
-      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
-        <template #renderItem="{ item }">
-          <a-list-item key="item.name">
-            <template #actions>
-              <span>
-                <component v-bind:is="'FileOutlined'" style="margin-right: 8px" />
-                {{ item.docCount }}
-              </span>
-              <span>
-                <component v-bind:is="'UserOutlined'" style="margin-right: 8px" />
-                {{ item.viewCount }}
-              </span>
-              <span>
-                <component v-bind:is="'LikeOutlined'" style="margin-right: 8px" />
-                {{ item.voteCount }}
-              </span>
-            </template>
-            <a-list-item-meta :description="item.description">
-              <template #title>
-                <router-link :to="'/doc?ebookId=' + item.id">
-                  {{ item.name }}
-                </router-link>
-              </template>
-              <template #avatar><a-avatar :src="item.cover"/></template>
-            </a-list-item-meta>
-          </a-list-item>
-        </template>
-      </a-list>
+      <a-card title="热门文章" style="width: 100%">
+        <template #extra><a href="#">更多</a></template>
+        <a-list item-layout="horizontal" :data-source="data">
+          <template #renderItem="{ item }">
+            <a-list-item>
+              <a-list-item-meta
+                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+              >
+                <template #title>
+                  <a href="https://www.antdv.com/">{{ item.title }}</a>
+                </template>
+                <template #avatar>
+                  <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                </template>
+              </a-list-item-meta>
+            </a-list-item>
+          </template>
+        </a-list>
+      </a-card>
+
+
     </a-layout-content>
+
   </a-layout>
 </template>
 
@@ -68,10 +62,12 @@ import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 import Banner from "@/views/admin/banner.vue";
+import TheFooter from "@/components/the-footer.vue";
 
 
 export default defineComponent({
   components: {
+    TheFooter,
     Banner,
     StarOutlined,
     LikeOutlined,
@@ -127,6 +123,29 @@ export default defineComponent({
       }
     };
 
+    const onCollapse = (collapsed: boolean, type: string) => {
+      console.log(collapsed, type);
+    };
+
+    const onBreakpoint = (broken: boolean) => {
+      console.log(broken);
+    };
+
+    const data = [
+      {
+        title: 'Ant Design Title 1',
+      },
+      {
+        title: 'Ant Design Title 2',
+      },
+      {
+        title: 'Ant Design Title 3',
+      },
+      {
+        title: 'Ant Design Title 4',
+      },
+    ];
+
     onMounted(function (){
       handleQueryCategory();
     });
@@ -145,9 +164,13 @@ export default defineComponent({
       { type: 'MessageOutlined', text: '2' },
      ],
 
+      onBreakpoint,
+      onCollapse,
+
       handleClick,
       level1,
 
+      data,
       isShowWelcome
     }
   }
@@ -155,11 +178,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .ant-avatar{
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    border-radius: 8%;
-    margin: 5px 0;
+  .site-layout .site-layout-background {
+    background: #fff;
+  }
+  #root,body,html {
+    height: 100%;
+  }
+
+  .ant-layout {
+    display: flex!important;
+    width: 100%!important;
+    min-height: 100%!important;
   }
 </style>
