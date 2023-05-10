@@ -1,6 +1,6 @@
 package com.Knowledge.wiki.resp;
 
-public class EbookQueryResp {
+public class EbookQueryResp implements Comparable<EbookQueryResp>{
     private Long id;
 
     private String name;
@@ -108,5 +108,10 @@ public class EbookQueryResp {
         sb.append(", voteCount=").append(voteCount);
         sb.append("]");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(EbookQueryResp ebookQueryResp) {
+        return  ebookQueryResp.voteCount - this.voteCount;
     }
 }

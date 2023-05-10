@@ -42,4 +42,19 @@ class WikiApplicationTests {
         System.out.println(list);
 
     }
+
+    @Test
+    public void listByVoteCount() {
+        EbookExample ebookExample = new EbookExample();
+        List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
+
+        List<EbookQueryResp> list1 = CopyUtil.copyList(ebookList, EbookQueryResp.class);
+        Collections.sort(list1);
+
+        List<EbookQueryResp> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            list.add(list1.get(i));
+        }
+        System.out.println(list);
+    }
 }

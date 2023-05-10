@@ -47,8 +47,14 @@ public class EbookController {
         CommonResp<List<EbookQueryResp>> resp = new CommonResp<>();
         List<EbookQueryResp> list = ebookService.listByViewCount();
         resp.setContent(list);
-        System.out.println("列表："+list);
-        System.out.println("列表22："+resp);
+        return resp;
+    }
+
+    @GetMapping("/listByVoteCount")
+    public CommonResp listByVoteCount() {
+        CommonResp<List<EbookQueryResp>> resp = new CommonResp<>();
+        List<EbookQueryResp> list = ebookService.listByVoteCount();
+        resp.setContent(list);
         return resp;
     }
 

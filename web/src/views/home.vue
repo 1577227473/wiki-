@@ -57,17 +57,19 @@
         <br/>
         <a-card title="文章点赞排行" style="width: 100%">
           <template #extra><a href="#">更多</a></template>
-          <a-list item-layout="horizontal" :data-source="data">
+          <a-list item-layout="horizontal" :data-source="VoteCounts">
             <template #renderItem="{ item }">
               <a-list-item>
                 <a-list-item-meta
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    :description="item.description"
                 >
                   <template #title>
-                    <a href="https://www.antdv.com/">{{ item.title }}</a>
+                    <router-link :to="'/doc?ebookId=' + item.id">
+                      {{ item.name }}
+                    </router-link>
                   </template>
                   <template #avatar>
-                    <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                    <a-avatar :src="item.cover" />
                   </template>
                 </a-list-item-meta>
               </a-list-item>
@@ -190,10 +192,21 @@ export default defineComponent({
     const handleGetEbooks = () =>{
       axios.get("/ebook/listByViewCount").then(function(response){
         const data=response.data;
-        console.log("按访问排名：",data.value);
         if(data.success){
           ViewCounts.value = data.content;
-          console.log("按访问排名--",ViewCounts.value);
+          console.log("按访问排名",ViewCounts.value);
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+    const VoteCounts = ref();
+    const handleGetEbooks2 = () =>{
+      axios.get("/ebook/listByVoteCount").then(function(response){
+        const data=response.data;
+        if(data.success){
+          VoteCounts.value = data.content;
+          console.log("按访点赞排名",ViewCounts.value);
         } else {
           message.error(data.message);
         }
@@ -203,6 +216,7 @@ export default defineComponent({
 
     onMounted(function (){
       handleGetEbooks();
+      handleGetEbooks2();
       handleQueryCategory();
     });
 
@@ -219,11 +233,13 @@ export default defineComponent({
       { type: 'MessageOutlined', text: '2' },
      ],
 
+      handleGetEbooks2,
       onBreakpoint,
       onCollapse,
       handleClick,
 
       ebooks,
+      VoteCounts,
       ViewCounts,
       level1,
 
