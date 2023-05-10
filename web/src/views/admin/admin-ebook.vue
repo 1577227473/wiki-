@@ -31,7 +31,7 @@
           @change="handleTableChange"
       >
         <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar"/>
+          <img v-if="cover" :src="cover" alt="avatar" style="height: 50px;border-radius: 50%"/>
         </template>
         <template v-slot:category="{ text , record }">
           <span>{{getCategoryName(record.category1Id)}} / {{getCategoryName(record.category2Id)}}</span>
