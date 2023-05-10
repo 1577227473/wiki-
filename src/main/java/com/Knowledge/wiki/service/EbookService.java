@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -81,4 +83,22 @@ public class EbookService {
     public void delete(Long id) {
         ebookMapper.deleteByPrimaryKey(id);
     }
+
+    public List<EbookQueryResp> listByViewCount() {
+        EbookExample ebookExample = new EbookExample();
+        List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
+
+        Collections.sort(ebookList);
+
+        List<Ebook> list1 = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            list1.add(ebookList.get(i));
+        }
+
+        List<EbookQueryResp> list = CopyUtil.copyList(list1, EbookQueryResp.class);
+
+        return list;
+    }
+
+
 }

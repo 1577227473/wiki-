@@ -1,6 +1,6 @@
 package com.Knowledge.wiki.domain;
 
-public class Ebook {
+public class Ebook implements Comparable<Ebook>{
     private Long id;
 
     private String name;
@@ -91,6 +91,8 @@ public class Ebook {
         this.voteCount = voteCount;
     }
 
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -108,5 +110,10 @@ public class Ebook {
         sb.append(", voteCount=").append(voteCount);
         sb.append("]");
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(Ebook ebook) {
+        return  ebook.viewCount - this.viewCount;
     }
 }

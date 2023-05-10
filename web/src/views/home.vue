@@ -22,34 +22,88 @@
     <a-layout-content
         :style="{ padding: '24px', margin: 0, minHeight: '280px' }"
     >
+      <div id="components-back-top-demo-custom">
+        <a-back-top>
+          <div style="width: 40px;height: 40px;background-color: bisque;border-radius: 50%;text-align: center">
+            <ArrowUpOutlined style="margin-top: 14px"/>
+          </div>
+        </a-back-top>
+      </div>
       <div class="welcome" v-show="isShowWelcome">
 <!--        <h1>欢迎来到知识库系统</h1>-->
       <banner></banner>
         <br/>
+        <a-card title="热门文章" style="width: 100%">
+          <template #extra><a href="#">更多</a></template>
+          <a-list item-layout="horizontal" :data-source="ViewCounts">
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <a-list-item-meta
+                    :description="item.description"
+                >
+                  <template #title>
+                    <router-link :to="'/doc?ebookId=' + item.id">
+                      {{ item.name }}
+                    </router-link>
+                  </template>
+                  <template #avatar>
+                    <a-avatar :src="item.cover" />
+                  </template>
+                </a-list-item-meta>
+              </a-list-item>
+            </template>
+          </a-list>
+        </a-card>
+        <br/>
+        <a-card title="文章点赞排行" style="width: 100%">
+          <template #extra><a href="#">更多</a></template>
+          <a-list item-layout="horizontal" :data-source="data">
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <a-list-item-meta
+                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                >
+                  <template #title>
+                    <a href="https://www.antdv.com/">{{ item.title }}</a>
+                  </template>
+                  <template #avatar>
+                    <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                  </template>
+                </a-list-item-meta>
+              </a-list-item>
+            </template>
+          </a-list>
+        </a-card>
       </div>
-      <a-card title="热门文章" style="width: 100%">
-        <template #extra><a href="#">更多</a></template>
-        <a-list item-layout="horizontal" :data-source="data">
-          <template #renderItem="{ item }">
-            <a-list-item>
-              <a-list-item-meta
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-              >
-                <template #title>
-                  <a href="https://www.antdv.com/">{{ item.title }}</a>
-                </template>
-                <template #avatar>
-                  <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                </template>
-              </a-list-item-meta>
-            </a-list-item>
-          </template>
-        </a-list>
-      </a-card>
-
-
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
+        <template #renderItem="{ item }">
+          <a-list-item key="item.name">
+            <template #actions>
+              <span>
+                <component v-bind:is="'FileOutlined'" style="margin-right: 8px" />
+                {{ item.docCount }}
+              </span>
+              <span>
+                <component v-bind:is="'UserOutlined'" style="margin-right: 8px" />
+                {{ item.viewCount }}
+              </span>
+              <span>
+                <component v-bind:is="'LikeOutlined'" style="margin-right: 8px" />
+                {{ item.voteCount }}
+              </span>
+            </template>
+            <a-list-item-meta :description="item.description">
+              <template #title>
+                <router-link :to="'/doc?ebookId=' + item.id">
+                  {{ item.name }}
+                </router-link>
+              </template>
+              <template #avatar><a-avatar :src="item.cover"/></template>
+            </a-list-item-meta>
+          </a-list-item>
+        </template>
+      </a-list>
     </a-layout-content>
-
   </a-layout>
 </template>
 
@@ -131,27 +185,28 @@ export default defineComponent({
       console.log(broken);
     };
 
-    const data = [
-      {
-        title: 'Ant Design Title 1',
-      },
-      {
-        title: 'Ant Design Title 2',
-      },
-      {
-        title: 'Ant Design Title 3',
-      },
-      {
-        title: 'Ant Design Title 4',
-      },
-    ];
+
+    const ViewCounts = ref();
+    const handleGetEbooks = () =>{
+      axios.get("/ebook/listByViewCount").then(function(response){
+        const data=response.data;
+        console.log("按访问排名：",data.value);
+        if(data.success){
+          ViewCounts.value = data.content;
+          console.log("按访问排名--",ViewCounts.value);
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
 
     onMounted(function (){
+      handleGetEbooks();
       handleQueryCategory();
     });
 
     return{
-      ebooks,
       pagination : {
         onChange: (page: any) => {
           console.log(page);
@@ -166,11 +221,12 @@ export default defineComponent({
 
       onBreakpoint,
       onCollapse,
-
       handleClick,
+
+      ebooks,
+      ViewCounts,
       level1,
 
-      data,
       isShowWelcome
     }
   }
@@ -189,5 +245,8 @@ export default defineComponent({
     display: flex!important;
     width: 100%!important;
     min-height: 100%!important;
+  }
+  #components-back-top-demo-custom .ant-back-top {
+    right: 10px;
   }
 </style>
